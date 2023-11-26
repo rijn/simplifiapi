@@ -6,6 +6,10 @@ logger = logging.getLogger("simplifiapi")
 
 
 class Client():
+
+    def __init__(self):
+        self.session = requests.Session()
+
     def get_token(self, email, password):
         # Step 1: Oauth authorize
         body = {
@@ -19,7 +23,7 @@ class Client():
             "threatMetrixSessionId": str(uuid.uuid4()),
             "username": email,
         }
-        r = requests.post(
+        r = self.session.post(
             url="https://services.quicken.com/oauth/authorize", json=body)
         data = r.json()
         status = data.get("status")
@@ -31,6 +35,7 @@ class Client():
             body["mfaCode"] = mfaCode
             r = requests.post(
                 url="https://services.quicken.com/oauth/authorize", json=body)
+            r.raise_for_status()
             data = r.json()
             status = data.get("status")
             if (status != "User passed MFA"):
@@ -40,14 +45,15 @@ class Client():
         code = r.json().get("code")
 
         # Step 2: Get token
-        r = requests.post(url="https://services.quicken.com/oauth/token",
-                          json={
-                              "clientId": "acme_web",
-                              "clientSecret": "BCDCxXwdWYcj@bK6",
-                              "grantType": "authorization_code",
-                              "code": code,
-                              "redirectUri": "https://app.simplifimoney.com/login"
-                          })
+        r = self.session.post(url="https://services.quicken.com/oauth/token",
+                              json={
+                                  "clientId": "acme_web",
+                                  "clientSecret": "BCDCxXwdWYcj@bK6",
+                                  "grantType": "authorization_code",
+                                  "code": code,
+                                  "redirectUri": "https://app.simplifimoney.com/login"
+                              })
+        r.raise_for_status()
         token = r.json().get("accessToken")
 
         logger.warn("Retrieved token {}".format(token))
@@ -56,8 +62,9 @@ class Client():
 
     def verify_token(self, token) -> bool:
         headers = {"Authorization": "Bearer {}".format(token)}
-        r = requests.get(url="https://services.quicken.com/userprofiles/me",
-                         headers=headers)
+
+        r = self.session.get(url="https://services.quicken.com/userprofiles/me",
+                             headers=headers)
         if (r.status_code != 200):
             logger.error("Error code: {}".format(r.status_code))
             logger.error(r.json())
@@ -65,4 +72,29 @@ class Client():
         data = r.json()
         userId = data.get("id")
         logger.warn("User {} logged in.".format(userId))
+
+        # Update session
+        self.session.headers.update(headers)
+
         return True
+
+    def get_datasets(self, limit: int = 1000):
+        r = self.session.get(url="https://services.quicken.com/datasets",
+                             params={
+                                 limit: limit,
+                             })
+        r.raise_for_status()
+        data = r.json().get("resources")
+        return data
+
+    def get_transactions(self, datasetId: str, limit: int = 1000):
+        r = self.session.get(url="https://services.quicken.com/transactions",
+                             headers={
+                                 "Qcs-Dataset-Id": datasetId,
+                             },
+                             params={
+                                 limit: limit,
+                             })
+        r.raise_for_status()
+        data = r.json().get("resources")
+        return data
