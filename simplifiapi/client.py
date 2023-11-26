@@ -99,11 +99,20 @@ class Client():
                                     limit: limit,
                                 })
 
-    def get_transactions(self, datasetId: str, limit: int = 1000):
+    def get_accounts(self, datasetId: str):
+        return self._unpaginate(path="/accounts",
+                                headers={
+                                     "Qcs-Dataset-Id": datasetId,
+                                },
+                                params={
+                                    "limit": 1000,
+                                })
+
+    def get_transactions(self, datasetId: str):
         return self._unpaginate(path="/transactions",
                                 headers={
                                      "Qcs-Dataset-Id": datasetId,
                                 },
                                 params={
-                                    limit: limit,
+                                    "limit": 1000,
                                 })

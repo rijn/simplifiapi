@@ -31,6 +31,10 @@ def parse_arguments(args):
                         help="Use existing token to bypass MFA check")
 
     # Datasets
+    parser.add_argument('--accounts',
+                        action="store_true",
+                        default=False,
+                        help="Retrieve accounts")
     parser.add_argument('--transactions',
                         action="store_true",
                         default=False,
@@ -76,6 +80,10 @@ def main():
     # TODO: Support multiple datasets
     datasets = client.get_datasets()
     datasetId = datasets[0]["id"]
+
+    if (options.accounts):
+        accounts = client.get_accounts(datasetId)
+        write_data(options, accounts, "accounts")
 
     if (options.transactions):
         transactions = client.get_transactions(datasetId)
