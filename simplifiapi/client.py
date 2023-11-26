@@ -116,3 +116,21 @@ class Client():
                                 params={
                                     "limit": 1000,
                                 })
+
+    def get_tags(self, datasetId: str):
+        return self._unpaginate(path="/tags",
+                                headers={
+                                     "Qcs-Dataset-Id": datasetId,
+                                },
+                                params={
+                                    "limit": 1000,
+                                })
+
+    def get_categories(self, datasetId: str):
+        return self._unpaginate(path="/categories",
+                                headers={
+                                     "Qcs-Dataset-Id": datasetId,
+                                },
+                                params={
+                                    "limit": 1000,
+                                })

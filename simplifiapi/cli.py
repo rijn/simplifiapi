@@ -39,6 +39,14 @@ def parse_arguments(args):
                         action="store_true",
                         default=False,
                         help="Retrieve transactions")
+    parser.add_argument('--tags',
+                        action="store_true",
+                        default=False,
+                        help="Retrieve tags")
+    parser.add_argument('--categories',
+                        action="store_true",
+                        default=False,
+                        help="Retrieve categories")
 
     # Export
     parser.add_argument('--filename',
@@ -88,3 +96,11 @@ def main():
     if (options.transactions):
         transactions = client.get_transactions(datasetId)
         write_data(options, transactions, "transactions")
+
+    if (options.tags):
+        tags = client.get_tags(datasetId)
+        write_data(options, tags, "tags")
+
+    if (options.categories):
+        categories = client.get_categories(datasetId)
+        write_data(options, categories, "categories")

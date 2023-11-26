@@ -6,7 +6,7 @@ An unofficial API for Quicken Simplifi
 This package provides a command-line tool that could access and save data to local files.
 
 ```shell
-usage: __main__.py [-h] [--email [EMAIL]] [--password [PASSWORD]] [--token [TOKEN]] [--accounts] [--transactions] [--filename FILENAME] [--format {json,csv}]
+usage: __main__.py [-h] [--email [EMAIL]] [--password [PASSWORD]] [--token [TOKEN]] [--accounts] [--transactions] [--tags] [--categories] [--filename FILENAME] [--format {json,csv}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -16,6 +16,8 @@ optional arguments:
   --token [TOKEN]       Use existing token to bypass MFA check
   --accounts            Retrieve accounts
   --transactions        Retrieve transactions
+  --tags                Retrieve tags
+  --categories          Retrieve categories
   --filename FILENAME   Write results to file this prefix
   --format {json,csv}   The format used to return data.
 
