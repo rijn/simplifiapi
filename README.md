@@ -45,3 +45,7 @@ datasetId = datasets[0]["id"]
 # Access transactions
 transactions = client.get_transactions(datasetId)
 ```
+
+## Thanks
+
+This library is heavily inspired by [mintapi](https://github.com/mintapi/mintapi).
