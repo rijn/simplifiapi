@@ -5,7 +5,7 @@ An unofficial API for Quicken Simplifi
 
 This package provides a command-line tool that could access and save data to local files.
 
-```
+```shell
 usage: __main__.py [-h] [--email [EMAIL]] [--password [PASSWORD]] [--token [TOKEN]] [--transactions] [--filename FILENAME] [--format {json,csv}]
 
 optional arguments:
@@ -27,7 +27,7 @@ examples:
 
 The `Client` class allows accessing from python script and making custom analysis.
 
-```
+```python
 from simplifiapi.client import Client
 
 client = Client()
