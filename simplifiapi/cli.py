@@ -3,10 +3,14 @@ import logging
 import sys
 
 import configargparse
+from pandas import json_normalize
 
 from simplifiapi.client import Client
 
 logger = logging.getLogger("simplifiapi")
+
+JSON_FORMAT = "json"
+CSV_FORMAT = "csv"
 
 
 def parse_arguments(args):
@@ -36,14 +40,21 @@ def parse_arguments(args):
     parser.add_argument('--filename',
                         default="output",
                         help="Write results to file this prefix")
+    parser.add_argument('--format',
+                        choices=[JSON_FORMAT, CSV_FORMAT],
+                        default=JSON_FORMAT,
+                        help="The format used to return data.")
 
     return parser.parse_args(args)
 
 
 def write_data(options, data, name):
-    filename = "{}_{}.json".format(options.filename, name)
-    with open(filename, "w+") as f:
-        json.dump(data, f, indent=2)
+    filename = "{}_{}.{}".format(options.filename, name, options.format)
+    if options.format == CSV_FORMAT:
+        json_normalize(data).to_csv(filename, index=False)
+    elif options.format == JSON_FORMAT:
+        with open(filename, "w+") as f:
+            json.dump(data, f, indent=2)
 
 
 def main():
