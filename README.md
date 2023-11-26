@@ -14,7 +14,7 @@ pip3 install git+https://github.com/rijn/simplifiapi
 This package provides a command-line tool that could access and save data to local files.
 
 ```shell
-usage: __main__.py [-h] [--email [EMAIL]] [--password [PASSWORD]] [--token [TOKEN]] [--accounts] [--transactions] [--tags] [--categories] [--filename FILENAME] [--format {json,csv}]
+usage: simplifiapi [-h] [--email [EMAIL]] [--password [PASSWORD]] [--token [TOKEN]] [--accounts] [--transactions] [--tags] [--categories] [--filename FILENAME] [--format {json,csv}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -30,8 +30,8 @@ optional arguments:
   --format {json,csv}   The format used to return data.
 
 examples:
-> python3 -m simplifiapi --token="..." --transactions
-> python3 -m simplifiapi --token="..." --transactions --filename=20231125 --format=csv
+> simplifiapi --token="..." --transactions
+> simplifiapi --token="..." --transactions --filename=20231125 --format=csv
 ```
 
 ## Python API
