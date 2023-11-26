@@ -1,8 +1,11 @@
 import logging
 import requests
 import uuid
+from urllib.parse import urljoin
 
 logger = logging.getLogger("simplifiapi")
+
+SIMPLIFI_ENDPOINT = "https://services.quicken.com"
 
 
 class Client():
@@ -78,23 +81,29 @@ class Client():
 
         return True
 
-    def get_datasets(self, limit: int = 1000):
-        r = self.session.get(url="https://services.quicken.com/datasets",
-                             params={
-                                 limit: limit,
-                             })
-        r.raise_for_status()
-        data = r.json().get("resources")
+    def _unpaginate(self, path: str, **kargs):
+        nextLink = path
+        data = []
+        while nextLink:
+            logger.warn("Fetching {}".format(nextLink))
+            r = self.session.get(url=urljoin(
+                SIMPLIFI_ENDPOINT, nextLink), **kargs)
+            r.raise_for_status()
+            data.extend(r.json()["resources"])
+            nextLink = r.json().get("metaData").get("nextLink")
         return data
 
+    def get_datasets(self, limit: int = 1000):
+        return self._unpaginate(path="/datasets",
+                                params={
+                                    limit: limit,
+                                })
+
     def get_transactions(self, datasetId: str, limit: int = 1000):
-        r = self.session.get(url="https://services.quicken.com/transactions",
-                             headers={
-                                 "Qcs-Dataset-Id": datasetId,
-                             },
-                             params={
-                                 limit: limit,
-                             })
-        r.raise_for_status()
-        data = r.json().get("resources")
-        return data
+        return self._unpaginate(path="/transactions",
+                                headers={
+                                     "Qcs-Dataset-Id": datasetId,
+                                },
+                                params={
+                                    limit: limit,
+                                })
