@@ -50,6 +50,7 @@ def parse_arguments(args):
 
 def write_data(options, data, name):
     filename = "{}_{}.{}".format(options.filename, name, options.format)
+    logger.warn("Saving {} to {}".format(name, filename))
     if options.format == CSV_FORMAT:
         json_normalize(data).to_csv(filename, index=False)
     elif options.format == JSON_FORMAT:
