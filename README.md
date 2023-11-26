@@ -1,6 +1,14 @@
 # simplifiapi
 An unofficial API for Quicken Simplifi
 
+## Install
+
+PyPI is temporarily down. Install with pip from GitHub directly
+
+```shell
+pip3 install git+https://github.com/rijn/simplifiapi
+```
+
 ## CLI
 
 This package provides a command-line tool that could access and save data to local files.
